@@ -24,6 +24,8 @@ function main()
         {
             await browser.tabs.executeScript({file: "/content_scripts/LibJS.js"});
             await browser.tabs.executeScript({file: "/content_scripts/editify.js"});
+
+            window.close();
         }
         catch(e)
         {
