@@ -3,7 +3,8 @@
     "name": "Editify",
     "version": "1.0",
     
-    "Description": "Replaces in-page textareas with a code editor.",
+    "description": "Replaces in-page textareas with a code editor.",
+    "homepage_url": "https://github.com/personalizedrefrigerator/Editify",
 
     "icons":
     {
