@@ -20206,4 +20206,6 @@ SubWindowHelper.setDisplayNavabar = function(displayNavBar)
     }
 };
 
+window.SubWindowHelper = SubWindowHelper;
+window.EditorHelper = EditorHelper;
 })();
