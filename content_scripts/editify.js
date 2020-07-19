@@ -20,7 +20,7 @@ function main()
             for (const child of otherChildren)
             {
                 const childClass = child.getAttribute("class");
-                const childTag = child.tagName;
+                const childTag = child.tagName.toLowerCase();
 
                 // If it looks like a text editor, destroy it.
                 if (childClass.toLowerCase().search(/(code)|(ace)|(edit)/ig) !== -1
