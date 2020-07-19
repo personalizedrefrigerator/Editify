@@ -9698,6 +9698,14 @@ EditorHelper.replaceWithEditor = (elem, options) =>
     };
 
     handleTabSwitching();
+
+    editor.editCanvas.addEventListener("blur", () =>
+    {
+        // Update the text-view.
+        elem.value = editor.getText();
+    });
+
+    return editor;
 };
 
 // Inserted file ProgressEstimator.js encoding='utf-8'
@@ -20208,6 +20216,6 @@ SubWindowHelper.setDisplayNavabar = function(displayNavBar)
     }
 };
 
-window.SubWindowHelper = SubWindowHelper;
 window.EditorHelper = EditorHelper;
+window.SubWindowHelper = SubWindowHelper;
 })();
