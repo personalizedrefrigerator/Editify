@@ -8053,7 +8053,9 @@ Path: ${ me.saveDir }
 
         updateRestoreString();
 
-        event.preventDefault();
+        // Take ownership. We may handle it in onkeypress.
+        event.stopPropagation();
+
         return true;
     }, true);
 
@@ -20206,6 +20208,4 @@ SubWindowHelper.setDisplayNavabar = function(displayNavBar)
     }
 };
 
-window.SubWindowHelper = SubWindowHelper;
-window.EditorHelper = EditorHelper;
 })();
