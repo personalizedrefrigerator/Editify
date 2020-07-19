@@ -24,18 +24,28 @@ function main()
             if (childClass.toLowerCase().search(/(code)|(ace)|(edit)/ig) !== -1
                     && childTag === "div")
             {
-                child.outerHTML = "";
+                child.innerHTML = "";
             }
         }
-
-        // Now replace it.
-        EditorHelper.replaceWithEditor(textarea,
-        {
-            height: 300
-        });
     }
 
-    SubWindowHelper.alert("Done!");
+    requestAnimationFrame(() =>
+    {
+        const textareas = document.querySelectorAll("textarea");
+
+        for (const textarea of textareas)
+        {
+            textarea.style = "display: block; opacity: 1;"
+
+            // Now replace it.
+            EditorHelper.replaceWithEditor(textarea,
+            {
+                height: 300
+            });
+
+            SubWindowHelper.alert("Done!");
+        }
+    });
 }
 
 // Call main (hopefully) after LibJS has loaded.
