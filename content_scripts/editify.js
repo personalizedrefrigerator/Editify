@@ -13,21 +13,18 @@ function main()
     {
         // Some editors contain a textarea and a stylized editor.
         // If there seems to be a stylized editor, disable it.
-        if (textarea.style.display == "none")
+        const otherChildren = textarea.parentElement.children;
+
+        for (const child of otherChildren)
         {
-            const otherChildren = textarea.parentElement.children;
+            const childClass = child.getAttribute("class");
+            const childTag = child.tagName.toLowerCase();
 
-            for (const child of otherChildren)
+            // If it looks like a text editor, destroy it.
+            if (childClass.toLowerCase().search(/(code)|(ace)|(edit)/ig) !== -1
+                    && childTag === "div")
             {
-                const childClass = child.getAttribute("class");
-                const childTag = child.tagName.toLowerCase();
-
-                // If it looks like a text editor, destroy it.
-                if (childClass.toLowerCase().search(/(code)|(ace)|(edit)/ig) !== -1
-                        && childTag === "div")
-                {
-                    child.outerHTML = "";
-                }
+                child.outerHTML = "";
             }
         }
 
