@@ -7901,6 +7901,7 @@ Path: ${ me.saveDir }
                 });
 
                 event.preventDefault();
+                event.stopPropagation();
 
                 return true;
             }
