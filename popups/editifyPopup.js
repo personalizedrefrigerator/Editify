@@ -1,14 +1,23 @@
 "use strict";
 
-
+let mainCount = 0;
 function main()
 {
     if (!window.SubWindowHelper)
     {
-        alert("Failed to load LibJS.");
+        mainCount++;
+
+        if (mainCount > 100)
+        {
+            alert("Failed to load LibJS.");
+            return;
+        }
+
+        requestAnimationFrame(main);
+        return;
     }
 
-    self.browser = browser || (SubWindowHelper.alert("Unable to access browser entity!"));
+    self.browser = self.browser || (SubWindowHelper.alert("Unable to access browser entity!"));
 
     const confirmButton = document.querySelector("#Confirm");
     const cancelButton = document.querySelector("#Cancel");
@@ -32,6 +41,10 @@ function main()
             SubWindowHelper.alert("Error!", e + "");
         }
     });
+
+    confirmButton.focus();
+
+    console.log("Loaded popup.");
 }
 
 // Call main (hopefully) after LibJS has loaded.
