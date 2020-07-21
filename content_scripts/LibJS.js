@@ -1,5 +1,4 @@
 "use strict";
-
 (function()
 {
 
@@ -9608,6 +9607,8 @@ EditorHelper.replaceWithEditor = (elem, options) =>
         editor.runFrame.style.display = "block";
         editor.runFrame.height = options.height;
         editor.runFrame.style.height = options.height + "px";
+
+        return false;
     });
 
     if (options.font)
@@ -12060,9 +12061,11 @@ JSHelper.GlobalEvents =
 // An implementation of the observer pattern.
 // For global communication, use JSHelper.Notifier.
 // For internal communication, construct JSHelper.UniqueNotifier
-// using "new".
+// using "new". Store the previous event if storeDispatched is
+// given allowing a subset of listeners to opt to be notified
+// if the event has *ever* been triggered.
 JSHelper.UniqueNotifier = 
-(function()
+(function(storeDispatched)
 {
     let listeners = {};
     let listenerIdCounter = 0; // The id for the next listener.
@@ -12084,7 +12087,7 @@ JSHelper.UniqueNotifier =
     {
         // For compatibility with older versions of JSHelper...
         // If given a list of strings, return waitForAny.
-        if (fireForFirst !== undefined && typeof fireForFirst !== "boolean")
+        if (fireForFirst !== undefined && typeof (fireForFirst) !== "boolean")
         {
             return this.waitFor(arguments, false, true);
         }
@@ -12127,20 +12130,13 @@ JSHelper.UniqueNotifier =
             {
                 doResolve(resolveFullData);
             }
-            else if (eventNames.length == 1)
+            else if (eventNames.length == 1 || returnResult)
             {
                 resolve = (data, resolver) =>
                 {
                     resolved = true;
-                    
-                    if (returnResult)
-                    {
-                        doResolve.call(this, data);
-                    }
-                    else
-                    {
-                        doResolve.apply(this, [data, resolver]);
-                    }
+
+                    doResolve(data);
                 };
             }
             else
@@ -12152,14 +12148,7 @@ JSHelper.UniqueNotifier =
                     resolveFullData.data = data;
                     resolveFullData.event = resolver;
                     
-                    if (returnResult)
-                    {
-                        doResolve(data);
-                    }
-                    else
-                    {
-                        doResolve(resolveFullData);
-                    }
+                    doResolve(resolveFullData);
                 };
             }
         });
@@ -12232,18 +12221,22 @@ JSHelper.UniqueNotifier =
             }
         }
         
-        if (!dispatchedEvents[eventName])
+        // If data might be large, we might not want to storeDispatched.
+        if (storeDispatched)
         {
-            dispatchedEvents[eventName] = { count: 0, data: undefined };
+            if (!dispatchedEvents[eventName])
+            {
+                dispatchedEvents[eventName] = { count: 0, data: undefined };
+            }
+
+            dispatchedEvents[eventName].count++;
+            dispatchedEvents[eventName].data = content;
         }
-        
-        dispatchedEvents[eventName].count++;
-        dispatchedEvents[eventName].data = content;
     };
 });
 
-JSHelper.Notifier = new JSHelper.UniqueNotifier(); // Publicly-accessible, singleton 
-                                                   // instance of the notifier.
+JSHelper.Notifier = new JSHelper.UniqueNotifier(true); // Publicly-accessible, singleton 
+                                                       // instance of the notifier.
 
 // A method that throws.
 JSHelper.NotImplemented = (signature, message) => 
@@ -20218,6 +20211,6 @@ SubWindowHelper.setDisplayNavabar = function(displayNavBar)
     }
 };
 
-window.EditorHelper = EditorHelper;
 window.SubWindowHelper = SubWindowHelper;
+window.EditorHelper = EditorHelper;
 })();
